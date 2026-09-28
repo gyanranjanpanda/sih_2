@@ -297,6 +297,7 @@ class SurfaceConfig(_Base):
     tank_heat_loss_coefficient_w_per_m2_k: float = Field(gt=0.0, lt=100.0)
     tank_surface_area_m2: float = Field(gt=0.0, lt=10000.0)
     bowser_capacity_m3: float = Field(gt=0.0, lt=1000.0)
+    max_well_rate_m3_per_day: float = Field(gt=0.0, lt=10000.0)
     steam_generator_thermal_power_w: float = Field(gt=0.0, lt=1.0e9)
     steam_generator_efficiency_frac: float = Field(gt=0.0, le=1.0)
     steam_generator_count: int = Field(ge=1, le=50)

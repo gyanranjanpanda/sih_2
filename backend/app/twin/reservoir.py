@@ -391,6 +391,7 @@ class ReservoirState:
     cumulative_conduction_loss_j: float = 0.0
     cumulative_produced_heat_j: float = 0.0
     cycle_oil_m3: float = 0.0
+    cycle_water_m3: float = 0.0
     cycle_steam_m3_cwe: float = 0.0
     history: list[dict[str, float]] = field(default_factory=list)
 
@@ -670,25 +671,32 @@ class ReservoirModel:
     def transient_drainage_radius_m(self, production_days: float) -> float:
         """Radius of investigation of the pressure transient since the well came on.
 
-        Equation: r_inv = sqrt(4 eta t), bounded below by the heated radius and
-        above by the drainage radius.
+        Equation: r_inv = sqrt(r_h^2 + 4 eta_cold t), capped at the drainage
+        radius.
         Units: m. Time in days.
         Rationale: a CSS well is reopened after every soak, so the flow is
         transient for much of the cycle. Holding the outer radius at the full
         drainage radius from day one would overstate the cold-oil resistance and
-        understate the early-cycle rate. This term is what produces the
-        characteristic CSS shape of a peak right after the soak followed by a
-        decline as the transient reaches further into cold oil.
+        understate the early-cycle rate, and would lose the characteristic CSS
+        shape of a peak right after the soak followed by a decline.
+
+        The two-region form matters. Inside the heated zone the hydraulic
+        diffusivity is three orders of magnitude larger than outside it, because
+        diffusivity goes as one over viscosity. With the numbers for this field
+        the transient crosses the whole heated zone in under a minute, so on a
+        daily step the transient always starts at the heated radius and then
+        advances at the cold diffusivity. Writing it as r_h^2 plus the cold
+        growth term captures that and removes the singularity a plain lower
+        bound at r_h would leave at t = 0.
         Source: Dake chapter 5; Lee, Well Testing, SPE Textbook 1, section 1.3.
         """
         reservoir = self.config.reservoir
-        floor_m = max(self.state.heated_radius_m, reservoir.wellbore_radius_m * 2.0)
-        if production_days <= 0.0:
-            return floor_m
+        heated_radius_m = max(self.state.heated_radius_m, reservoir.wellbore_radius_m * 2.0)
+        elapsed_s = max(production_days, 0.0) * SECONDS_PER_DAY
         radius_m = math.sqrt(
-            4.0 * self.hydraulic_diffusivity_m2_per_s() * production_days * SECONDS_PER_DAY
+            heated_radius_m**2 + 4.0 * self.hydraulic_diffusivity_m2_per_s() * elapsed_s
         )
-        return float(min(max(radius_m, floor_m), reservoir.drainage_radius_m))
+        return float(min(radius_m, reservoir.drainage_radius_m))
 
     def deliverability_m3_per_day(
         self, bottomhole_pressure_kpa: float, production_days: float | None = None
@@ -707,7 +715,9 @@ class ReservoirModel:
         drawdown_kpa = state.reservoir_pressure_kpa - bottomhole_pressure_kpa
         if drawdown_kpa <= 0.0:
             return 0.0
-        elapsed_days = state.phase_day if production_days is None else production_days
+        # Evaluate the transient at the midpoint of the step, which is the
+        # correct quadrature point and keeps the first step well posed.
+        elapsed_days = state.phase_day + 0.5 if production_days is None else production_days
         outer_radius_m = self.transient_drainage_radius_m(elapsed_days)
         cold_viscosity = self.cold_viscosity_pa_s()
         hot_viscosity = self.sandface_viscosity_pa_s()
@@ -819,6 +829,7 @@ class ReservoirModel:
         state.cumulative_oil_m3 += oil_rate * days
         state.cumulative_water_m3 += water_rate * days
         state.cycle_oil_m3 += oil_rate * days
+        state.cycle_water_m3 += water_rate * days
         state.day += days
         state.phase_day += days
 
@@ -840,6 +851,7 @@ class ReservoirModel:
         state.phase = CyclePhase.INJECTION
         state.phase_day = 0.0
         state.cycle_oil_m3 = 0.0
+        state.cycle_water_m3 = 0.0
         state.cycle_steam_m3_cwe = 0.0
         state.heated_zone_energy_j *= self.parameters.cycle_energy_retention_frac
         state.water_cut_frac = min(
@@ -869,6 +881,7 @@ class ReservoirModel:
             "cumulative_oil_m3": state.cumulative_oil_m3,
             "cumulative_steam_m3_cwe": state.cumulative_steam_m3_cwe,
             "cycle_oil_m3": state.cycle_oil_m3,
+            "cycle_water_m3": state.cycle_water_m3,
             "cycle_steam_m3_cwe": state.cycle_steam_m3_cwe,
             "steam_oil_ratio": state.steam_oil_ratio,
             "heated_zone_energy_j": state.heated_zone_energy_j,

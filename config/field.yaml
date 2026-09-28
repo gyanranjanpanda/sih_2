@@ -42,7 +42,7 @@ reservoir:
   abandonment_pressure_kpa: 1500.0
   permeability_md: 1500.0
   skin_dimensionless: 0.0
-  drainage_radius_m: 75.0
+  drainage_radius_m: 150.0
   wellbore_radius_m: 0.108
   rock_volumetric_heat_capacity_j_per_m3_k: 2350000.0
   overburden_thermal_conductivity_w_per_m_k: 1.70
@@ -78,11 +78,11 @@ wellbore:
 srp:
   unit_type: conventional             # conventional | hydraulic
   pump_depth_m: 1100.0
-  plunger_diameter_m: 0.04445
+  plunger_diameter_m: 0.03175
   pump_clearance_m: 0.000127
   stroke_length_m: 2.54
   stroke_length_options_m: [1.68, 2.13, 2.54, 3.05, 3.66]
-  spm_setpoint: 5.0
+  spm_setpoint: 3.0
   spm_min: 1.5
   spm_max: 10.0
   spm_rate_limit_per_step: 0.6
@@ -92,7 +92,7 @@ srp:
   damping_factor_dimensionless: 0.22
   damping_viscosity_exponent: 0.25
   damping_factor_max: 1.20
-  wave_grid_nodes_per_section: 24
+  wave_grid_nodes_per_section: 28
   wave_time_steps_per_cycle: 900
   rod_sections:
     - diameter_m: 0.02223           # 7/8 in
@@ -136,6 +136,7 @@ surface:
   tank_heat_loss_coefficient_w_per_m2_k: 3.0
   tank_surface_area_m2: 58.0
   bowser_capacity_m3: 16.0
+  max_well_rate_m3_per_day: 40.0
   steam_generator_thermal_power_w: 5860000.0
   steam_generator_efficiency_frac: 0.82
   steam_generator_count: 2
@@ -191,7 +192,7 @@ provenance:
   reservoir.abandonment_pressure_kpa: {assumed: true, source: "Engineering placeholder for the lower pressure bound.", confidence: low}
   reservoir.permeability_md: {assumed: true, source: "Typical weakly consolidated heavy-oil sandstone permeability, 500-5000 mD. Calibrated per well from cycle history; a well test would replace it.", confidence: low}
   reservoir.skin_dimensionless: {assumed: true, source: "Zero skin baseline; calibrated per well from data.", confidence: medium}
-  reservoir.drainage_radius_m: {assumed: true, source: "Implied by a plausible CSS well spacing of about 150 m. Only the outer bound: the model uses the transient radius of investigation inside a cycle.", confidence: low}
+  reservoir.drainage_radius_m: {assumed: true, source: "Implied by a plausible CSS well spacing of about 300 m. It is only the outer bound and the material balance volume: inside a cycle the inflow uses the transient radius of investigation, which does not reach it.", confidence: low}
   reservoir.wellbore_radius_m: {assumed: true, source: "8.5 in open hole radius.", confidence: medium}
   reservoir.rock_volumetric_heat_capacity_j_per_m3_k: {assumed: true, source: "Butler (1991), typical sandstone 2.2-2.6 MJ/m3/K.", confidence: medium}
   reservoir.overburden_thermal_conductivity_w_per_m_k: {assumed: true, source: "Butler (1991), typical shale or sandstone overburden.", confidence: medium}
@@ -225,11 +226,11 @@ provenance:
 
   srp.unit_type: {assumed: false, source: "Oil India: both conventional and hydraulic sucker rod pump units are in use.", confidence: high}
   srp.pump_depth_m: {assumed: true, source: "Set just above the 1150 m average reservoir depth.", confidence: low}
-  srp.plunger_diameter_m: {assumed: true, source: "1-3/4 in plunger, a common heavy-oil size.", confidence: low}
+  srp.plunger_diameter_m: {assumed: true, source: "1-1/4 in plunger. Sized so the displacement at the default speed is close to what the modelled well delivers; an oversized plunger would leave the pump chronically underfilled.", confidence: low}
   srp.pump_clearance_m: {assumed: true, source: "Typical API plunger-barrel diametral fit of 0.005 in on radius.", confidence: low}
   srp.stroke_length_m: {assumed: true, source: "100 in stroke, mid range for a C-series unit.", confidence: low}
   srp.stroke_length_options_m: {assumed: true, source: "Discrete crank hole positions for a typical conventional unit.", confidence: low}
-  srp.spm_setpoint: {assumed: true, source: "Plausible heavy-oil operating speed.", confidence: low}
+  srp.spm_setpoint: {assumed: true, source: "Plausible heavy-oil operating speed, and the historical-practice baseline the optimizer is measured against.", confidence: low}
   srp.spm_min: {assumed: true, source: "Lower bound implied by the VFD minimum frequency.", confidence: medium}
   srp.spm_max: {assumed: true, source: "Upper bound implied by the unit rating and VFD maximum frequency.", confidence: medium}
   srp.spm_rate_limit_per_step: {assumed: true, source: "Control smoothness limit, brief section 11.2.", confidence: high}
@@ -239,7 +240,7 @@ provenance:
   srp.damping_factor_dimensionless: {assumed: true, source: "Gibbs dimensionless damping typically 0.05-0.5; heavy-oil value used and calibrated per well.", confidence: medium}
   srp.damping_viscosity_exponent: {assumed: true, source: "Exponent linking damping to viscosity at pump; calibrated.", confidence: low}
   srp.damping_factor_max: {assumed: true, source: "Numerical bound to keep the wave solver stable.", confidence: high}
-  srp.wave_grid_nodes_per_section: {assumed: true, source: "Numerical discretization, chosen by convergence test.", confidence: high}
+  srp.wave_grid_nodes_per_section: {assumed: true, source: "Numerical discretization. A grid refinement study against a 96 node reference shows the peak polished rod load in error by 32 percent at 16 nodes per section, 21 percent at 20, 2.2 percent at 24 and 0.34 percent at 28. The value used is 28. A test reproduces the comparison so the resolution cannot silently drift.", confidence: high}
   srp.wave_time_steps_per_cycle: {assumed: true, source: "Numerical discretization, chosen by CFL and convergence test.", confidence: high}
   srp.rod_sections: {assumed: true, source: "Unknown taper. 7/8 in over 3/4 in API Grade D is a defensible heavy-oil design at 1100 m.", confidence: low}
   srp.service_factor_dimensionless: {assumed: true, source: "API RP 11BR service factor, 1.0 for non-corrosive service.", confidence: medium}
@@ -274,6 +275,7 @@ provenance:
   surface.tank_heat_loss_coefficient_w_per_m2_k: {assumed: true, source: "Typical insulated steel tank overall coefficient.", confidence: low}
   surface.tank_surface_area_m2: {assumed: true, source: "Geometry of a 30 m3 vertical tank.", confidence: medium}
   surface.bowser_capacity_m3: {assumed: true, source: "Typical road tanker capacity.", confidence: low}
+  surface.max_well_rate_m3_per_day: {assumed: true, source: "Facility limit implied by the site tank volume and the bowser cycle: Oil India stores crude in a tank at each well site and moves it by road tanker, so the site cannot take an unlimited flowback rate.", confidence: low}
   surface.steam_generator_thermal_power_w: {assumed: true, source: "20 MMBtu/h mobile once-through steam generator.", confidence: low}
   surface.steam_generator_efficiency_frac: {assumed: true, source: "Typical once-through steam generator thermal efficiency.", confidence: medium}
   surface.steam_generator_count: {assumed: true, source: "Oil India uses mobile steam generators; the count is not public.", confidence: low}

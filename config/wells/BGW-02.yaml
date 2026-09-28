@@ -1,0 +1,12 @@
+# Well overlay generated from the synthetic dataset.
+# Only information an engineer could have without a well test is here:
+# the completion record and a laboratory viscosity table. Everything
+# else is left to calibration.
+srp:
+  unit_type: conventional
+fluid:
+  viscosity_anchors:
+  - temp_c: 50.0
+    viscosity_cp: 10683.8
+  - temp_c: 200.0
+    viscosity_cp: 11.695

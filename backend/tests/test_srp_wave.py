@@ -452,3 +452,38 @@ def test_drag_profile_length_is_validated(
             cycles=2,
             drag=bad,
         )
+
+
+def test_wave_grid_resolution_is_converged(
+    field_config: FieldConfig, kinematics: ConventionalKinematics
+) -> None:
+    """The configured rod grid must be fine enough that halving the step barely moves the card.
+
+    This test exists because an earlier configuration used 16 nodes per section,
+    which looked converged against one light load case and was 32 percent wrong
+    on a heavier one. The comparison is now run over a spread of speeds, loads
+    and fillages, against a reference grid with three times the resolution.
+    """
+    configured = build_taper(field_config.srp)
+    reference = build_taper(field_config.srp, nodes_per_section=84)
+    cases = (
+        (1.5, 15000.0, 1.0),
+        (3.0, 15000.0, 1.0),
+        (6.0, 20000.0, 1.0),
+        (3.0, 15000.0, 0.5),
+    )
+    for spm, load_n, fillage in cases:
+        motion = kinematics.motion(spm, 2.54, SpeedProfile(), 360)
+        boundary = PumpBoundary(load_n, fillage, stroke_length_m=2.3)
+        coarse = solve_forward(
+            motion, configured, field_config.srp, boundary, 0.25, 900.0, cycles=6
+        )
+        fine = solve_forward(motion, reference, field_config.srp, boundary, 0.25, 900.0, cycles=6)
+        error = (
+            abs(coarse.peak_polished_rod_load_n - fine.peak_polished_rod_load_n)
+            / fine.peak_polished_rod_load_n
+        )
+        assert error < 0.05, (
+            f"peak load is {error * 100:.1f} percent from the refined grid at "
+            f"{spm} strokes per minute, {load_n} N fluid load, {fillage} fillage"
+        )
