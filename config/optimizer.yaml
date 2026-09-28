@@ -1,0 +1,74 @@
+# Optimizer settings. Weights and bounds only; no physical field constants here.
+
+css:
+  algorithm: nsga2
+  population_size: 40
+  generations: 25
+  seed: 20260101
+  variables:
+    steam_volume_m3_cwe: {low: 800.0, high: 3200.0}
+    injection_rate_m3_per_day_cwe: {low: 90.0, high: 260.0}
+    injection_pressure_kpa: {low: 7000.0, high: 17000.0}
+    steam_quality_frac: {low: 0.60, high: 0.90}
+    soak_days: {low: 2.0, high: 14.0}
+    cutoff_marginal_energy_ratio: {low: 0.15, high: 0.70}
+  objective_weights:
+    cycle_oil_m3: 1.0
+    steam_oil_ratio: 0.55
+    energy_cost_usd: 0.35
+  constraints:
+    fracture_pressure_safety_frac: 0.92
+    min_heated_radius_m: 6.0
+    max_injection_days: 30.0
+    min_float_margin_frac: 0.15
+    max_rod_stress_utilization_frac: 0.90
+  robust:
+    enabled: true
+    ensemble_size: 12
+    percentile: 20
+    parameter_spread_frac: 0.18
+  surrogate:
+    enabled: true
+    training_samples: 120
+    revalidate_every_n_calls: 200
+    max_acceptable_mape_frac: 0.12
+
+pump:
+  algorithm: mpc_local_search
+  horizon_days: 7
+  horizon_steps: 7
+  seed: 20260101
+  restarts: 6
+  iterations: 60
+  variables:
+    spm: {low: 1.5, high: 10.0}
+    downstroke_speed_frac: {low: 0.45, high: 1.0}
+    upstroke_speed_frac: {low: 0.60, high: 1.15}
+    top_of_downstroke_decel_frac: {low: 0.0, high: 0.5}
+  objective:
+    production_weight: 1.0
+    energy_weight: 0.30
+    float_penalty_weight: 6.0
+    load_penalty_weight: 4.0
+  constraints:
+    min_float_margin_frac: 0.15
+    max_structural_load_frac: 0.90
+    max_gearbox_torque_frac: 0.90
+    min_fillage_frac: 0.70
+    min_polished_rod_load_n: 1000.0
+    max_stroke_change_per_step_m: 0.5
+    max_spm_change_per_step: 0.6
+
+fleet:
+  solver: cp_sat
+  max_solve_seconds: 20.0
+  horizon_days: 180
+  baseline_rule: earliest_due_first
+  deferred_oil_weight: 1.0
+  makespan_weight: 0.05
+
+guard:
+  mode: advisory                     # advisory | auto (simulation only)
+  clamp_to_config_bounds: true
+  max_relative_change_per_step_frac: 0.25
+  reject_on_nan: true

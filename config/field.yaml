@@ -1,0 +1,297 @@
+# Baghewala heavy oil field defaults.
+# Rule: every numeric leaf below must have an entry in `provenance` (tests enforce this).
+# Values marked assumed: true in `provenance` are engineering-plausible placeholders and
+# must be replaced through the calibration workflow before any field use.
+
+field:
+  name: Baghewala
+  operator: Oil India Limited
+  basin: Bikaner-Nagaur
+  formation: Jodhpur Sandstone
+  data_mode: SYNTHETIC
+
+fluid:
+  api_gravity_deg: 18.0
+  # ASTM D341 (Walther) anchors: (temperature, kinematic viscosity).
+  # Anchor 1 is the midpoint of the published 10000-13000 cP range at 50 C.
+  viscosity_anchors:
+    - temp_c: 50.0
+      viscosity_cp: 11500.0
+    - temp_c: 200.0
+      viscosity_cp: 12.0
+  viscosity_model: walther            # walther | arrhenius
+  emulsion_model: richardson          # richardson | brinkman | none
+  emulsion_richardson_k: 6.0
+  emulsion_inversion_water_cut_frac: 0.65
+  asphaltene_multiplier: 1.0
+  asphaltene_enabled: false
+  non_newtonian_enabled: false
+  power_law_index: 0.85
+  oil_specific_heat_j_per_kg_k: 2000.0
+  water_specific_heat_j_per_kg_k: 4186.0
+  oil_thermal_expansion_per_k: 0.00072
+  water_density_kg_per_m3: 1000.0
+  reference_temp_c: 15.56
+
+reservoir:
+  depth_m: 1150.0
+  net_pay_thickness_m: 12.0
+  porosity_frac: 0.22
+  initial_temp_c: 47.0
+  initial_pressure_kpa: 8200.0
+  abandonment_pressure_kpa: 1500.0
+  permeability_md: 1500.0
+  skin_dimensionless: 0.0
+  drainage_radius_m: 75.0
+  wellbore_radius_m: 0.108
+  rock_volumetric_heat_capacity_j_per_m3_k: 2350000.0
+  overburden_thermal_conductivity_w_per_m_k: 1.70
+  overburden_volumetric_heat_capacity_j_per_m3_k: 2350000.0
+  reservoir_thermal_conductivity_w_per_m_k: 1.50
+  oil_saturation_initial_frac: 0.78
+  residual_oil_saturation_frac: 0.22
+  total_compressibility_per_kpa: 1.2e-6
+  fracture_pressure_gradient_kpa_per_m: 16.0
+  fracture_enhancement_enabled: false
+  fracture_area_multiplier: 1.35
+  dilation_enabled: false
+  water_cut_initial_frac: 0.12
+  water_cut_growth_per_cycle_frac: 0.06
+  water_cut_max_frac: 0.92
+  cycle_energy_retention_frac: 0.86
+  productivity_decline_per_cycle_frac: 0.08
+
+wellbore:
+  tubing_outer_diameter_m: 0.0730
+  tubing_inner_diameter_m: 0.0620
+  casing_inner_diameter_m: 0.1594
+  insulation_type: vit                # vit | bare
+  vit_overall_heat_transfer_w_per_m2_k: 0.60
+  bare_overall_heat_transfer_w_per_m2_k: 17.0
+  formation_thermal_conductivity_w_per_m_k: 1.70
+  formation_thermal_diffusivity_m2_per_s: 7.2e-7
+  surface_temp_c: 32.0
+  geothermal_gradient_c_per_m: 0.0130
+  tubing_roughness_m: 4.5e-5
+  wellhead_pressure_kpa: 350.0
+
+srp:
+  unit_type: conventional             # conventional | hydraulic
+  pump_depth_m: 1100.0
+  plunger_diameter_m: 0.04445
+  pump_clearance_m: 0.000127
+  stroke_length_m: 2.54
+  stroke_length_options_m: [1.68, 2.13, 2.54, 3.05, 3.66]
+  spm_setpoint: 5.0
+  spm_min: 1.5
+  spm_max: 10.0
+  spm_rate_limit_per_step: 0.6
+  acoustic_velocity_m_per_s: 4990.0
+  steel_density_kg_per_m3: 7850.0
+  steel_youngs_modulus_pa: 2.07e11
+  damping_factor_dimensionless: 0.22
+  damping_viscosity_exponent: 0.25
+  damping_factor_max: 1.20
+  wave_grid_nodes_per_section: 24
+  wave_time_steps_per_cycle: 900
+  rod_sections:
+    - diameter_m: 0.02223           # 7/8 in
+      length_m: 550.0
+      grade: D
+      minimum_tensile_strength_pa: 7.93e8
+    - diameter_m: 0.01905           # 3/4 in
+      length_m: 550.0
+      grade: D
+      minimum_tensile_strength_pa: 7.93e8
+  service_factor_dimensionless: 1.0
+  structural_load_rating_n: 106800.0
+  gearbox_torque_rating_n_m: 87000.0
+  counterbalance_moment_n_m: 52000.0
+  pitman_length_m: 3.05
+  crank_to_saddle_distance_m: 3.66
+  walking_beam_rear_arm_m: 2.44
+  walking_beam_front_arm_m: 3.05
+  motor_rated_power_w: 56000.0
+  motor_efficiency_peak_frac: 0.92
+  gearbox_efficiency_frac: 0.90
+  belt_efficiency_frac: 0.96
+  vfd_frequency_min_hz: 15.0
+  vfd_frequency_max_hz: 60.0
+  vfd_base_frequency_hz: 50.0
+  hydraulic_max_pressure_kpa: 21000.0
+  hydraulic_max_flow_m3_per_s: 0.0022
+  hydraulic_cylinder_area_m2: 0.0182
+  hydraulic_upstroke_speed_frac: 1.0
+  hydraulic_downstroke_speed_frac: 1.0
+  hydraulic_dwell_s: 0.5
+  float_margin_minimum_frac: 0.15
+  minimum_polished_rod_load_n: 1000.0
+  minimum_fillage_frac: 0.70
+  gas_interference_frac: 0.0
+
+surface:
+  tank_volume_m3: 30.0
+  tank_target_temp_c: 60.0
+  tank_ambient_temp_c: 28.0
+  tank_heat_loss_coefficient_w_per_m2_k: 3.0
+  tank_surface_area_m2: 58.0
+  bowser_capacity_m3: 16.0
+  steam_generator_thermal_power_w: 5860000.0
+  steam_generator_efficiency_frac: 0.82
+  steam_generator_count: 2
+  rig_move_days: 1.0
+
+css:
+  steam_volume_m3_cwe: 1800.0
+  injection_rate_m3_per_day_cwe: 160.0
+  injection_pressure_kpa: 11000.0
+  steam_quality_frac: 0.78
+  soak_days: 6.0
+  production_days_max: 150.0
+  cutoff_oil_rate_m3_per_day: 0.8
+  cutoff_marginal_energy_ratio: 0.35
+  cycles_planned: 8
+
+economics:
+  oil_price_usd_per_m3: 440.0
+  fuel_cost_usd_per_gj: 8.5
+  electricity_cost_usd_per_kwh: 0.09
+  rod_job_cost_usd: 9000.0
+  pump_unseating_cost_usd: 4500.0
+  deferred_oil_penalty_usd_per_m3_day: 1.2
+
+provenance:
+  field.name: {assumed: false, source: "Oil India, Rajasthan Fields page", confidence: high}
+  field.operator: {assumed: false, source: "Oil India, Rajasthan Fields page", confidence: high}
+  field.basin: {assumed: false, source: "Oil India, Rajasthan Fields page", confidence: high}
+  field.formation: {assumed: false, source: "Oil India, Rajasthan Fields page", confidence: high}
+  field.data_mode: {assumed: false, source: "Operating mode flag, not a field measurement", confidence: high}
+
+  fluid.api_gravity_deg: {assumed: false, source: "SIH26120 problem statement, 17-19 deg API; midpoint used", confidence: high}
+  fluid.viscosity_anchors: {assumed: true, source: "Anchor at 50 C is the midpoint of the published 10000-13000 cP range (Oil India). The 200 C anchor is an engineering estimate for a 18 deg API crude; no public Baghewala measurement exists.", confidence: medium}
+  fluid.viscosity_model: {assumed: true, source: "ASTM D341 Walther chosen as the standard petroleum correlation.", confidence: high}
+  fluid.emulsion_model: {assumed: true, source: "Richardson exponential uplift chosen; no Baghewala emulsion data.", confidence: low}
+  fluid.emulsion_richardson_k: {assumed: true, source: "Typical heavy-oil Richardson constant 4-8; midpoint used.", confidence: low}
+  fluid.emulsion_inversion_water_cut_frac: {assumed: true, source: "Typical water-in-oil inversion point 0.6-0.7.", confidence: low}
+  fluid.asphaltene_multiplier: {assumed: true, source: "Disabled by default; no asphaltene deposition data.", confidence: low}
+  fluid.asphaltene_enabled: {assumed: true, source: "Off by default per brief section 8.1.", confidence: high}
+  fluid.non_newtonian_enabled: {assumed: true, source: "Off by default per brief section 8.1.", confidence: high}
+  fluid.power_law_index: {assumed: true, source: "Typical heavy-oil pseudoplastic index when enabled.", confidence: low}
+  fluid.oil_specific_heat_j_per_kg_k: {assumed: true, source: "Typical crude oil value 1900-2100 J/kg/K.", confidence: medium}
+  fluid.water_specific_heat_j_per_kg_k: {assumed: false, source: "Physical constant for liquid water near 1 atm.", confidence: high}
+  fluid.oil_thermal_expansion_per_k: {assumed: true, source: "Typical heavy crude coefficient of thermal expansion.", confidence: medium}
+  fluid.water_density_kg_per_m3: {assumed: false, source: "Physical constant, fresh water at standard conditions.", confidence: high}
+  fluid.reference_temp_c: {assumed: false, source: "API gravity reference temperature, 60 deg F.", confidence: high}
+
+  reservoir.depth_m: {assumed: false, source: "Oil India, Rajasthan Fields page: average depth 1150 m", confidence: high}
+  reservoir.net_pay_thickness_m: {assumed: true, source: "No public net pay for Jodhpur Sandstone at Baghewala; 12 m is a plausible CSS target thickness.", confidence: low}
+  reservoir.porosity_frac: {assumed: true, source: "Typical sandstone porosity for a shallow heavy-oil reservoir.", confidence: low}
+  reservoir.initial_temp_c: {assumed: false, source: "SIH26120 problem statement, 46-48 C; midpoint used", confidence: high}
+  reservoir.initial_pressure_kpa: {assumed: true, source: "Problem statement says low reservoir pressure; set below the 1150 m hydrostatic value of about 11300 kPa.", confidence: low}
+  reservoir.abandonment_pressure_kpa: {assumed: true, source: "Engineering placeholder for the lower pressure bound.", confidence: low}
+  reservoir.permeability_md: {assumed: true, source: "Typical weakly consolidated heavy-oil sandstone permeability, 500-5000 mD. Calibrated per well from cycle history; a well test would replace it.", confidence: low}
+  reservoir.skin_dimensionless: {assumed: true, source: "Zero skin baseline; calibrated per well from data.", confidence: medium}
+  reservoir.drainage_radius_m: {assumed: true, source: "Implied by a plausible CSS well spacing of about 150 m. Only the outer bound: the model uses the transient radius of investigation inside a cycle.", confidence: low}
+  reservoir.wellbore_radius_m: {assumed: true, source: "8.5 in open hole radius.", confidence: medium}
+  reservoir.rock_volumetric_heat_capacity_j_per_m3_k: {assumed: true, source: "Butler (1991), typical sandstone 2.2-2.6 MJ/m3/K.", confidence: medium}
+  reservoir.overburden_thermal_conductivity_w_per_m_k: {assumed: true, source: "Butler (1991), typical shale or sandstone overburden.", confidence: medium}
+  reservoir.overburden_volumetric_heat_capacity_j_per_m3_k: {assumed: true, source: "Butler (1991), typical overburden value.", confidence: medium}
+  reservoir.reservoir_thermal_conductivity_w_per_m_k: {assumed: true, source: "Typical oil-saturated sandstone conductivity.", confidence: medium}
+  reservoir.oil_saturation_initial_frac: {assumed: true, source: "Typical heavy-oil initial oil saturation.", confidence: low}
+  reservoir.residual_oil_saturation_frac: {assumed: true, source: "Typical thermal residual oil saturation.", confidence: low}
+  reservoir.total_compressibility_per_kpa: {assumed: true, source: "Typical total compressibility for an undersaturated heavy-oil system.", confidence: low}
+  reservoir.fracture_pressure_gradient_kpa_per_m: {assumed: true, source: "Typical fracture gradient 15-18 kPa/m; must be replaced by a field leak-off test.", confidence: low}
+  reservoir.fracture_enhancement_enabled: {assumed: true, source: "Off by default. A trade article calls the Jodhpur Sandstone naturally fractured but the source is secondary.", confidence: low}
+  reservoir.fracture_area_multiplier: {assumed: true, source: "Placeholder uplift used only when the fracture switch is on.", confidence: low}
+  reservoir.dilation_enabled: {assumed: true, source: "Off by default per brief section 8.2.", confidence: high}
+  reservoir.water_cut_initial_frac: {assumed: true, source: "Plausible early-cycle water cut for a CSS well.", confidence: low}
+  reservoir.water_cut_growth_per_cycle_frac: {assumed: true, source: "Plausible cycle-on-cycle water cut growth for CSS.", confidence: low}
+  reservoir.water_cut_max_frac: {assumed: true, source: "Economic ceiling placeholder.", confidence: low}
+  reservoir.cycle_energy_retention_frac: {assumed: true, source: "Fraction of heated-zone energy carried into the next cycle; fitted from history in REAL mode.", confidence: low}
+  reservoir.productivity_decline_per_cycle_frac: {assumed: true, source: "Typical CSS cycle-to-cycle productivity loss; fitted in REAL mode.", confidence: low}
+
+  wellbore.tubing_outer_diameter_m: {assumed: true, source: "2-7/8 in tubing, a common thermal completion size.", confidence: medium}
+  wellbore.tubing_inner_diameter_m: {assumed: true, source: "2-7/8 in, 6.5 lb/ft tubing drift.", confidence: medium}
+  wellbore.casing_inner_diameter_m: {assumed: true, source: "7 in, 26 lb/ft casing drift.", confidence: medium}
+  wellbore.insulation_type: {assumed: false, source: "Oil India: most wells completed with vacuum insulated tubing.", confidence: high}
+  wellbore.vit_overall_heat_transfer_w_per_m2_k: {assumed: true, source: "Published VIT overall coefficients fall near 0.3-1.0 W/m2/K; midpoint used.", confidence: medium}
+  wellbore.bare_overall_heat_transfer_w_per_m2_k: {assumed: true, source: "Typical bare tubing with annulus heat transfer, order 10-25 W/m2/K.", confidence: medium}
+  wellbore.formation_thermal_conductivity_w_per_m_k: {assumed: true, source: "Same basis as the overburden conductivity.", confidence: medium}
+  wellbore.formation_thermal_diffusivity_m2_per_s: {assumed: true, source: "Conductivity divided by volumetric heat capacity.", confidence: medium}
+  wellbore.surface_temp_c: {assumed: true, source: "Plausible mean ground temperature for the Thar desert.", confidence: low}
+  wellbore.geothermal_gradient_c_per_m: {assumed: true, source: "Implied by a 47 C reservoir at 1150 m with a 32 C surface.", confidence: medium}
+  wellbore.tubing_roughness_m: {assumed: true, source: "Commercial steel absolute roughness.", confidence: high}
+  wellbore.wellhead_pressure_kpa: {assumed: true, source: "Plausible flowline backpressure at a tank battery.", confidence: low}
+
+  srp.unit_type: {assumed: false, source: "Oil India: both conventional and hydraulic sucker rod pump units are in use.", confidence: high}
+  srp.pump_depth_m: {assumed: true, source: "Set just above the 1150 m average reservoir depth.", confidence: low}
+  srp.plunger_diameter_m: {assumed: true, source: "1-3/4 in plunger, a common heavy-oil size.", confidence: low}
+  srp.pump_clearance_m: {assumed: true, source: "Typical API plunger-barrel diametral fit of 0.005 in on radius.", confidence: low}
+  srp.stroke_length_m: {assumed: true, source: "100 in stroke, mid range for a C-series unit.", confidence: low}
+  srp.stroke_length_options_m: {assumed: true, source: "Discrete crank hole positions for a typical conventional unit.", confidence: low}
+  srp.spm_setpoint: {assumed: true, source: "Plausible heavy-oil operating speed.", confidence: low}
+  srp.spm_min: {assumed: true, source: "Lower bound implied by the VFD minimum frequency.", confidence: medium}
+  srp.spm_max: {assumed: true, source: "Upper bound implied by the unit rating and VFD maximum frequency.", confidence: medium}
+  srp.spm_rate_limit_per_step: {assumed: true, source: "Control smoothness limit, brief section 11.2.", confidence: high}
+  srp.acoustic_velocity_m_per_s: {assumed: false, source: "Gibbs, Rod Pumping: acoustic velocity in steel rods, about 4990 m/s.", confidence: high}
+  srp.steel_density_kg_per_m3: {assumed: false, source: "Physical constant for carbon steel.", confidence: high}
+  srp.steel_youngs_modulus_pa: {assumed: false, source: "Physical constant for carbon steel.", confidence: high}
+  srp.damping_factor_dimensionless: {assumed: true, source: "Gibbs dimensionless damping typically 0.05-0.5; heavy-oil value used and calibrated per well.", confidence: medium}
+  srp.damping_viscosity_exponent: {assumed: true, source: "Exponent linking damping to viscosity at pump; calibrated.", confidence: low}
+  srp.damping_factor_max: {assumed: true, source: "Numerical bound to keep the wave solver stable.", confidence: high}
+  srp.wave_grid_nodes_per_section: {assumed: true, source: "Numerical discretization, chosen by convergence test.", confidence: high}
+  srp.wave_time_steps_per_cycle: {assumed: true, source: "Numerical discretization, chosen by CFL and convergence test.", confidence: high}
+  srp.rod_sections: {assumed: true, source: "Unknown taper. 7/8 in over 3/4 in API Grade D is a defensible heavy-oil design at 1100 m.", confidence: low}
+  srp.service_factor_dimensionless: {assumed: true, source: "API RP 11BR service factor, 1.0 for non-corrosive service.", confidence: medium}
+  srp.structural_load_rating_n: {assumed: true, source: "24000 lbf structural capacity, typical C-456D-256-100 class unit.", confidence: low}
+  srp.gearbox_torque_rating_n_m: {assumed: true, source: "456000 in-lbf gearbox rating for the same unit class.", confidence: low}
+  srp.counterbalance_moment_n_m: {assumed: true, source: "Set near the ideal counterbalance for the assumed rod string.", confidence: low}
+  srp.pitman_length_m: {assumed: true, source: "Geometry consistent with the assumed unit class. The crank radius is not configured: it is derived as stroke divided by twice the beam ratio, so changing the stroke stays self-consistent.", confidence: low}
+  srp.crank_to_saddle_distance_m: {assumed: true, source: "API Spec 11E four-bar dimension K for the assumed C-456 class unit.", confidence: low}
+  srp.walking_beam_rear_arm_m: {assumed: true, source: "Geometry consistent with the assumed unit class.", confidence: low}
+  srp.walking_beam_front_arm_m: {assumed: true, source: "Geometry consistent with the assumed unit class.", confidence: low}
+  srp.motor_rated_power_w: {assumed: true, source: "75 hp motor, typical for this unit class.", confidence: low}
+  srp.motor_efficiency_peak_frac: {assumed: true, source: "NEMA premium efficiency induction motor at rated load.", confidence: medium}
+  srp.gearbox_efficiency_frac: {assumed: true, source: "Typical double reduction gearbox efficiency.", confidence: medium}
+  srp.belt_efficiency_frac: {assumed: true, source: "Typical V-belt drive efficiency.", confidence: medium}
+  srp.vfd_frequency_min_hz: {assumed: true, source: "Plausible lower limit for cooling of a standard motor.", confidence: medium}
+  srp.vfd_frequency_max_hz: {assumed: true, source: "Plausible upper limit within the unit rating.", confidence: medium}
+  srp.vfd_base_frequency_hz: {assumed: true, source: "Indian grid frequency.", confidence: high}
+  srp.hydraulic_max_pressure_kpa: {assumed: true, source: "Typical hydraulic long-stroke unit working pressure.", confidence: low}
+  srp.hydraulic_max_flow_m3_per_s: {assumed: true, source: "Typical hydraulic power unit flow rating.", confidence: low}
+  srp.hydraulic_cylinder_area_m2: {assumed: true, source: "Consistent with the assumed pressure and load ratings.", confidence: low}
+  srp.hydraulic_upstroke_speed_frac: {assumed: true, source: "Neutral default, the optimizer varies it.", confidence: high}
+  srp.hydraulic_downstroke_speed_frac: {assumed: true, source: "Neutral default, the optimizer varies it.", confidence: high}
+  srp.hydraulic_dwell_s: {assumed: true, source: "Plausible end-of-stroke dwell for a hydraulic unit.", confidence: low}
+  srp.float_margin_minimum_frac: {assumed: true, source: "Safety margin chosen so the rods keep positive fall capacity; operator tunable.", confidence: medium}
+  srp.minimum_polished_rod_load_n: {assumed: false, source: "Published rod float control methods use a few hundred pounds, about 1 kN (US 7547196).", confidence: medium}
+  srp.minimum_fillage_frac: {assumed: true, source: "Common pump-off controller setpoint.", confidence: medium}
+  srp.gas_interference_frac: {assumed: true, source: "Zero baseline; set per well from diagnostics.", confidence: medium}
+
+  surface.tank_volume_m3: {assumed: true, source: "Plausible well-site storage tank size.", confidence: low}
+  surface.tank_target_temp_c: {assumed: true, source: "Temperature at which 18 deg API crude is bowser-pumpable.", confidence: low}
+  surface.tank_ambient_temp_c: {assumed: true, source: "Annual mean ambient for the Thar desert.", confidence: low}
+  surface.tank_heat_loss_coefficient_w_per_m2_k: {assumed: true, source: "Typical insulated steel tank overall coefficient.", confidence: low}
+  surface.tank_surface_area_m2: {assumed: true, source: "Geometry of a 30 m3 vertical tank.", confidence: medium}
+  surface.bowser_capacity_m3: {assumed: true, source: "Typical road tanker capacity.", confidence: low}
+  surface.steam_generator_thermal_power_w: {assumed: true, source: "20 MMBtu/h mobile once-through steam generator.", confidence: low}
+  surface.steam_generator_efficiency_frac: {assumed: true, source: "Typical once-through steam generator thermal efficiency.", confidence: medium}
+  surface.steam_generator_count: {assumed: true, source: "Oil India uses mobile steam generators; the count is not public.", confidence: low}
+  surface.rig_move_days: {assumed: true, source: "Plausible mobile unit move time between well sites.", confidence: low}
+
+  css.steam_volume_m3_cwe: {assumed: true, source: "Plausible CSS slug for a 12 m pay; actual Baghewala volumes are not public.", confidence: low}
+  css.injection_rate_m3_per_day_cwe: {assumed: true, source: "Implied by the generator rating and a 11 day injection.", confidence: low}
+  css.injection_pressure_kpa: {assumed: true, source: "Set below the assumed fracture pressure at 1150 m.", confidence: low}
+  css.steam_quality_frac: {assumed: true, source: "Typical wellhead quality from a once-through generator.", confidence: medium}
+  css.soak_days: {assumed: true, source: "Typical CSS soak window.", confidence: low}
+  css.production_days_max: {assumed: true, source: "Plausible cycle production window.", confidence: low}
+  css.cutoff_oil_rate_m3_per_day: {assumed: true, source: "Economic rate limit placeholder.", confidence: low}
+  css.cutoff_marginal_energy_ratio: {assumed: true, source: "Marginal oil per unit energy cut-off, brief section 11.1.", confidence: medium}
+  css.cycles_planned: {assumed: true, source: "Brief section 9 asks for 6-10 cycles per well.", confidence: high}
+
+  economics.oil_price_usd_per_m3: {assumed: true, source: "Illustrative price only; not an Oil India realization.", confidence: low}
+  economics.fuel_cost_usd_per_gj: {assumed: true, source: "Illustrative fuel cost for steam generation.", confidence: low}
+  economics.electricity_cost_usd_per_kwh: {assumed: true, source: "Illustrative industrial tariff.", confidence: low}
+  economics.rod_job_cost_usd: {assumed: true, source: "Illustrative workover cost for a rod parting.", confidence: low}
+  economics.pump_unseating_cost_usd: {assumed: true, source: "Illustrative intervention cost for a pump unseating.", confidence: low}
+  economics.deferred_oil_penalty_usd_per_m3_day: {assumed: true, source: "Scheduler penalty weight, a tuning parameter not a field cost.", confidence: high}

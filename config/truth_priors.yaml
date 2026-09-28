@@ -1,0 +1,60 @@
+# Priors for the hidden parameters of the truth simulator.
+# The twin package must never read this file. Tests enforce the import boundary.
+
+seed: 26120
+
+wells:
+  count: 12
+  cycles_min: 6
+  cycles_max: 10
+  telemetry_minutes_high_rate: 1
+  telemetry_minutes_low_rate: 15
+  high_rate_well_fraction: 0.25
+  days_of_telemetry: 730
+
+priors:
+  permeability_md: {distribution: lognormal, median: 480.0, log_sigma: 0.45, low: 120.0, high: 2200.0}
+  net_pay_thickness_m: {distribution: normal, mean: 12.0, sigma: 3.0, low: 5.0, high: 22.0}
+  porosity_frac: {distribution: normal, mean: 0.22, sigma: 0.03, low: 0.13, high: 0.31}
+  initial_pressure_kpa: {distribution: normal, mean: 8200.0, sigma: 700.0, low: 6200.0, high: 10200.0}
+  skin_dimensionless: {distribution: normal, mean: 1.0, sigma: 1.6, low: -2.0, high: 7.0}
+  viscosity_50c_cp: {distribution: uniform, low: 10000.0, high: 13000.0}
+  overburden_thermal_conductivity_w_per_m_k: {distribution: normal, mean: 1.70, sigma: 0.22, low: 1.10, high: 2.40}
+  vit_overall_heat_transfer_w_per_m2_k: {distribution: lognormal, median: 0.62, log_sigma: 0.35, low: 0.25, high: 2.20}
+  vit_degradation_per_year_frac: {distribution: uniform, low: 0.0, high: 0.35}
+  rod_damping_factor: {distribution: normal, mean: 0.24, sigma: 0.07, low: 0.08, high: 0.55}
+  water_cut_initial_frac: {distribution: uniform, low: 0.04, high: 0.25}
+  water_cut_growth_per_cycle_frac: {distribution: uniform, low: 0.03, high: 0.10}
+  cycle_energy_retention_frac: {distribution: uniform, low: 0.78, high: 0.93}
+  productivity_decline_per_cycle_frac: {distribution: uniform, low: 0.04, high: 0.14}
+  fracture_streak_present: {distribution: bernoulli, probability: 0.25}
+  fracture_permeability_multiplier: {distribution: uniform, low: 4.0, high: 20.0}
+  gravity_override_strength_frac: {distribution: uniform, low: 0.0, high: 0.35}
+
+layers:
+  count: 5
+  permeability_contrast_log_sigma: 0.55
+
+sensors:
+  load_noise_n_sigma: 220.0
+  position_noise_m_sigma: 0.004
+  temperature_noise_c_sigma: 1.1
+  pressure_noise_kpa_sigma: 45.0
+  rate_noise_frac_sigma: 0.06
+  drift_per_year_frac: 0.03
+  dropout_probability: 0.012
+  stuck_probability: 0.004
+  stuck_mean_duration_steps: 40
+  spike_probability: 0.0015
+  spike_magnitude_sigma: 6.0
+  unit_error_probability: 0.002
+
+faults:
+  rod_float: {base_rate_per_cycle: 0.30, viscosity_sensitivity: 2.0}
+  fluid_pound: {base_rate_per_cycle: 0.35}
+  gas_interference: {base_rate_per_cycle: 0.18}
+  tagging: {base_rate_per_cycle: 0.10}
+  worn_pump: {base_rate_per_cycle: 0.14}
+  sticking: {base_rate_per_cycle: 0.10}
+  pump_unseating: {base_rate_per_cycle: 0.09}
+  rod_parting: {base_rate_per_cycle: 0.05}

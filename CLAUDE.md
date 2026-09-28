@@ -1,0 +1,13 @@
+# Project rules (SIH26120 well twin)
+- Read BRIEF.md before any work. PLAN.md tracks progress. Work one milestone at a time.
+- Run `make verify` (ruff, mypy, pytest, mini scenario, API smoke test) before every commit. Never commit failing tests.
+- SI units inside the code. Units in variable names. Convert at the edges only.
+- No field constants in logic; use config/*.yaml. Mark every assumed value assumed: true with a reason.
+- Every physics function: docstring with equation, units, assumptions, source; tests against analytic or limiting cases.
+- The truth simulator must never be imported by twin/ code. The twin only sees noisy observations.
+- Label all synthetic outputs SYNTHETIC. Never present simulated results as field results.
+- ML: split by well and time. Always compare with the stated baseline. Report honestly.
+- Optimizer comparisons must check constraint status for both baseline and optimized runs.
+- Never use the tilde character in code, comments, docs, or UI text.
+- Never loosen a test tolerance to pass without documenting why in docs/VALIDATION.md.
+- Ask the user only when a decision is expensive to reverse; otherwise document the assumption and continue.
