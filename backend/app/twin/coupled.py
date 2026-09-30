@@ -368,7 +368,7 @@ class CoupledWellTwin:
         return self.config.wellbore.wellhead_pressure_kpa + column_kpa
 
     # ------------------------------------------------------------ lift system
-    def _fluid_load_n(
+    def fluid_load_n(
         self, bottomhole_pressure_kpa: float, temperature_c: float, water_cut_frac: float
     ) -> float:
         """Load the plunger carries with the travelling valve shut.
@@ -526,7 +526,7 @@ class CoupledWellTwin:
                 viscosity_profile,
                 max(rate_m3_per_day, 0.05),
             )
-            fluid_load_n = self._fluid_load_n(
+            fluid_load_n = self.fluid_load_n(
                 bottomhole_kpa, production.pump_intake_temp_c, water_cut_frac
             )
             fluid_density = float(
@@ -717,7 +717,7 @@ class CoupledWellTwin:
 
         for day_index in range(int(days_limit)):
             state = self.reservoir.state
-            fluid_load_n = self._fluid_load_n(
+            fluid_load_n = self.fluid_load_n(
                 self.minimum_intake_pressure_kpa,
                 state.average_heated_temp_c,
                 state.water_cut_frac,
